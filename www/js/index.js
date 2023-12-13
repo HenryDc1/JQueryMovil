@@ -26,9 +26,11 @@ function onDeviceReady() {
 
     // Ahora, la estructura de la página está completamente cargada
     $("#addTaskBtn").on("click", function() {
-        var newLiContent = '<li><a href="#newPage">New Page</a></li>';
-        $("#pageList").append(newLiContent);
-        $("#pageList").listview("refresh");
+            const text=prompt("Afegir text a la tasca :")
+            var newLiContent = `<li><a href="#newPage">${text}</a></li>`;
+            $("#pageList").append(newLiContent);
+            $("#pageList").listview("refresh");
+        
     });
 }
 
