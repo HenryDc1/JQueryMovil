@@ -24,47 +24,66 @@ document.addEventListener('deviceready', onDeviceReady, false);
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
 
-    $("#addTaskBtn").on("click", function () {
-        const text = prompt("Afegir text a la tasca :")
+    $("#addTaskBtn").on("click", addTask);
+
+    $("#deleteTaskBtn").on("click", deleteTask);
+}
+
+function addTask() {
+    const text = prompt("Afegir nom de la tasca :");
+    if (text !== null) {
         const newLiContent = `<li><a href="#${text}">${text}</a></li>`;
         $("#pageList").append(newLiContent);
         $("#pageList").listview("refresh");
 
-        const page = $("<div>", {
-            "data-role": "page",
-            id: text
-        });
-
-        const header = $("<div>", {
-            "data-role": "header"
-        }).append(
-            $("<a>", {
-                href: "#",
-                "data-icon": "back",
-                "data-rel": "back",
-                title: "Go back",
-                text: "Back"
-            }),
-            $("<h1>", { text: text })
-        );
-
-        const content = $("<div>", {
-            "class": "ui-content"
-        }).append(
-            $("<p>", { text: `This is ${text}` })
-        );
-
-        const footer = $("<div>", {
-            "data-role": "footer",
-            "data-position": "fixed"
-        }).append(
-            $("<h1>", { text: text })
-        );
-
-        page.append(header, content, footer);
+        const page = createPage(text);
         $("body").append(page);
-
-    });
+    }
 }
+
+function createPage(text) {
+    const page = $("<div>", {
+        "data-role": "page",
+        id: text
+    });
+
+    const header = $("<div>", {
+        "data-role": "header"
+    }).append(
+        $("<a>", {
+            href: "#",
+            "data-icon": "back",
+            "data-rel": "back",
+            title: "Go back",
+            text: "Back"
+        }),
+        $("<h1>", { text: text })
+    );
+
+    const content = $("<div>", {
+        "class": "ui-content"
+    }).append(
+        $("<p>", { text: `This is ${text}` })
+    );
+
+    const footer = $("<div>", {
+        "data-role": "footer",
+        "data-position": "fixed"
+    }).append(
+        $("<h1>", { text: text })
+    );
+
+    page.append(header, content, footer);
+    return page;
+}
+
+function deleteTask() {
+    const taskListName = prompt("Introdueix el nom de la tasca a eliminar:");
+    if (taskListName !== null) {
+        $(`#pageList li:contains(${taskListName})`).remove();
+        $("#pageList").listview("refresh");
+    }
+}
+
 
 
