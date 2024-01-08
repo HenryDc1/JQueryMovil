@@ -25,7 +25,6 @@ function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
 
     $("#addTaskBtn").on("click", addTask);
-
     $("#deleteTaskBtn").on("click", deleteTask);
 }
 
@@ -57,7 +56,16 @@ function createPage(text) {
             title: "Go back",
             text: "Back"
         }),
-        $("<h1>", { text: text })
+        $("<h1>", { text: text }),
+        $("<a>", {
+            href: "#",
+            "data-icon": "edit",
+            title: "Edit",
+            text: "Edit",
+            click: function () {
+                editPageName(text);
+            }
+        })
     );
 
     const content = $("<div>", {
@@ -77,6 +85,28 @@ function createPage(text) {
     return page;
 }
 
+function editPageName(oldName) {
+    const newName = prompt("Edita el nom de la pàgina:", oldName);
+    if (newName !== null) {
+        // Actualizar el nombre en el encabezado, pie de página y enlace
+        $(`#${oldName} [data-role="header"] h1`).text(newName);
+        $(`#${oldName} [data-role="footer"] h1`).text(newName);
+        $(`#${oldName} [href="#${oldName}"]`).text(newName);
+
+        // Actualizar el párrafo en el contenido de la página
+        $(`#${oldName} .ui-content p`).text(`This is ${newName}`);
+
+        // Actualizar el nombre en el listview
+        const listItem = $(`#pageList li:contains(${oldName})`);
+        listItem.find("a").text(newName);
+
+        // Refrescar el listview
+        $("#pageList").listview("refresh");
+    }
+}
+
+
+
 function deleteTask() {
     const taskListName = prompt("Introdueix el nom de la tasca a eliminar:");
     if (taskListName !== null) {
@@ -84,6 +114,3 @@ function deleteTask() {
         $("#pageList").listview("refresh");
     }
 }
-
-
-
