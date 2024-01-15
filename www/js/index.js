@@ -25,7 +25,6 @@ var tasks = [];
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    displayTasks();
     $("#addTaskBtn").on("click", addTask);
     $("#deleteTaskBtn").on("click", deleteTask);
 }
