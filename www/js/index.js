@@ -20,25 +20,55 @@
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
+var tasks = [];
 
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-
+    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    displayTasks();
     $("#addTaskBtn").on("click", addTask);
     $("#deleteTaskBtn").on("click", deleteTask);
 }
-
 function addTask() {
-    const text = prompt("Afegir nom de la tasca :");
+    const text = prompt("Añadir nombre de la tarea:");
     if (text !== null) {
-        const newLiContent = `<li><a href="#${text}">${text}</a></li>`;
+        // Verificar si la tarea ya existe en el array antes de agregarla
+        if (!tasks.includes(text)) {
+            // Agregar la tarea al array y guardar en el LocalStorage
+            tasks.push(text);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // Mostrar las tareas actualizadas
+            displayTasks();
+        } else {
+            alert("La tarea ya existe.");
+        }
+    }
+}
+
+function displayTasks() {
+    // Limpiar la lista antes de mostrar las tareas
+    $("#pageList").empty();
+
+    // Iterar sobre las tareas y agregarlas a la lista
+    tasks.forEach(function (text) {
+        const newLiContent = `<li><a href="#${text}">${text}</a><button class="deleteTaskBtn">BORRAR</button></li>`;
         $("#pageList").append(newLiContent);
-        $("#pageList").listview("refresh");
+
+        // Asignar el evento al nuevo botón
+        $(`#pageList li:contains(${text}) .deleteTaskBtn`).on("click", function () {
+            deleteTask(this, text); // Pasar el botón actual y el nombre de la tarea como argumentos
+        });
 
         const page = createPage(text);
         $("body").append(page);
-    }
+    });
+
+    // Refrescar el listview
+    $("#pageList").listview("refresh");
+    console.log('Contenido del array "tasks":', tasks);
 }
+
 
 function createPage(text) {
     const page = $("<div>", {
@@ -71,7 +101,7 @@ function createPage(text) {
     const content = $("<div>", {
         "class": "ui-content"
     }).append(
-        $("<p>", { text: `This is ${text}` })
+        $("<textarea>")
     );
 
     const footer = $("<div>", {
@@ -105,12 +135,24 @@ function editPageName(oldName) {
     }
 }
 
+function deleteTask(button, taskName) {
+    // Obtener el índice de la tarea a eliminar
+    const index = tasks.indexOf(taskName);
 
+    if (index !== -1) {
+        // Eliminar la tarea del array
+        tasks.splice(index, 1);
 
-function deleteTask() {
-    const taskListName = prompt("Introdueix el nom de la tasca a eliminar:");
-    if (taskListName !== null) {
-        $(`#pageList li:contains(${taskListName})`).remove();
+        // Guardar en el LocalStorage
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+
+        // Resto del código para eliminar el elemento con el nombre taskName
+        $(`#pageList li:contains(${taskName})`).remove();
         $("#pageList").listview("refresh");
+
+        // Mostrar el contenido actualizado del array en la consola
+        console.log('Contenido del array "tasks" después de eliminar:', tasks);
+    } else {
+        alert("La tarea no se encuentra en la lista.");
     }
 }
