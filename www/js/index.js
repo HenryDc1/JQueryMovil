@@ -52,7 +52,7 @@ function displayTasks() {
 
     // Iterar sobre las tareas y agregarlas a la lista
     tasks.forEach(function (text) {
-        const newLiContent = `<li><a href="#${text}">${text}</a><button class="deleteTaskBtn">BORRAR</button></li>`;
+        const newLiContent = `<li id="tasks"><a id="ancor" href="#${text}">${text}</a><button class="deleteTaskBtn">BORRAR</button></li>`;
         $("#pageList").append(newLiContent);
 
         // Asignar el evento al nuevo botón

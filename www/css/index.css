@@ -69,7 +69,12 @@ h1 {
     padding:0px;
     text-align:center;
 }
-
+#tasks{
+    display: flex;
+}
+#ancor{
+    width: -webkit-fill-available;
+}
 .event {
     border-radius:4px;
     color:#FFFFFF;
