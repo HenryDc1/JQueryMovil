@@ -132,8 +132,24 @@ function editPageName(oldName) {
 
         // Refrescar el listview
         $("#pageList").listview("refresh");
+        cambiarNombre(oldName, newName);
     }
 }
+function cambiarNombre(antiguoNombre, nuevoNombre) {
+    // Encontrar el índice del elemento con el antiguo nombre
+    const indice = tasks.indexOf(antiguoNombre);
+
+    // Verificar si se encontró el elemento
+    if (indice !== -1) {
+        // Actualizar el nombre del elemento
+        tasks[indice] = nuevoNombre;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        console.log(`Nombre actualizado para ${antiguoNombre}: ${nuevoNombre}`);
+    } else {
+        console.log(`No se encontró ninguna tarea con el nombre ${antiguoNombre}`);
+    }
+}
+
 
 function deleteTask(button, taskName) {
     // Obtener el índice de la tarea a eliminar
