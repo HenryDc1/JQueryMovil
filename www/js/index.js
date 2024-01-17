@@ -27,6 +27,7 @@ function onDeviceReady() {
     tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     $("#addTaskBtn").on("click", addTask);
     $("#deleteTaskBtn").on("click", deleteTask);
+    displayTasks();
 }
 function addTask() {
     const text = prompt("Añadir nombre de la tarea:");
